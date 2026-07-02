@@ -1067,7 +1067,7 @@ function renderOverview(){
       {label:'目標',data:gcMonths.map(m=>mt2[m]?.friends||null),borderColor:'rgba(58,194,207,.5)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
     ]},options:baseOpts(false)});
     mk('cValidGrowth',{type:'line',data:{labels:gcMonths,datasets:[
-      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).validFriends),borderColor:TEAL_C,backgroundColor:'rgba(58,194,207,.1)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
+      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).validFriends),borderColor:ORANGE_C,backgroundColor:'rgba(250,166,52,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
       {label:'目標',data:gcMonths.map(m=>mt2[m]?.valid||null),borderColor:'rgba(250,166,52,.55)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
     ]},options:baseOpts(false)});
 
@@ -1089,7 +1089,7 @@ function renderOverview(){
       {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(false)});
     mk('cInterRate',{type:'line',data:{labels:months,datasets:[
-      {label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:TEAL_C,backgroundColor:'rgba(58,194,207,.1)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
+      {label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:RED_C,backgroundColor:'rgba(240,77,41,.08)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(true,2)});
   },100);
 }
