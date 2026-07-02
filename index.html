@@ -290,30 +290,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:14px 0}
   </div>
 </div>
 
-<!-- Target Edit Dialog -->
-<div class="dialog-backdrop" id="targetEditDlg">
-  <div class="dialog-box" style="width:580px;max-height:80vh;display:flex;flex-direction:column">
-    <h3>設定好友成長目標</h3>
-    <div style="overflow-y:auto;flex:1;margin-bottom:12px">
-      <table style="width:100%;border-collapse:collapse;font-size:13px">
-        <thead><tr style="background:var(--bg2)">
-          <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--dark3)">目標月份</th>
-          <th style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--line-dk)">加入好友目標</th>
-          <th style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--orange-dk)">有效好友目標</th>
-          <th style="width:32px"></th>
-        </tr></thead>
-        <tbody id="targetTableBody"></tbody>
-      </table>
-      <button onclick="addTargetRow()" style="margin:10px 0;background:none;border:1.5px dashed var(--line);color:var(--line-dk);border-radius:6px;padding:6px 18px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;width:100%">＋ 新增月份目標</button>
-      <div id="targetAchieveSummary"></div>
-    </div>
-    <div class="dialog-actions">
-      <button class="btn-cancel" onclick="closeTargetDlg()">取消</button>
-      <button class="btn-save" onclick="saveTargetEdit()">儲存</button>
-    </div>
-  </div>
-</div>
-
 <!-- Add Month Dialog -->
 <div class="dialog-backdrop" id="addMonthDlg">
   <div class="dialog-box">
@@ -332,7 +308,7 @@ const IC={
   eye:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
   users:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
   send:`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
-  click:`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74"/><path d="M14 10.5a2.5 2.5 0 0 1 5 0V14a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L4 15"/></svg>`,
+  click:`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9l5 12 1.8-5.2L21 14 9 9z"/><path d="M7.2 2.2l.8 2.7"/><path d="M2.2 7.2l2.7.8"/><path d="M14 4.1 12 6"/><path d="M6 12l-1.9 2"/></svg>`,
   camera:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
   check:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
   block:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`,
@@ -584,69 +560,6 @@ function saveMonthEdit(){
   save();closeMonthEditDlg();renderPage();
 }
 
-// ── TARGET DIALOG ─────────────────────────────────────
-function openTargetDlg(){
-  const targets=appData.monthlyTargets||{};
-  const tbody=document.getElementById('targetTableBody');
-  tbody.innerHTML='';
-  Object.entries(targets).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([m,t])=>addTargetRow(m,t.friends,t.valid));
-  const months=ovMonths().slice().reverse();
-  let sumRows='';
-  months.forEach(m=>{
-    const d=getMonthOv(m);
-    const t=targets[m]||{};
-    const fp=t.friends&&d.friends!=null?(d.friends/t.friends*100):null;
-    const vp=t.valid&&d.validFriends!=null?(d.validFriends/t.valid*100):null;
-    sumRows+='<tr style="border-bottom:1px solid var(--border)">'
-      +'<td style="padding:6px 10px;font-weight:700">'+m+'</td>'
-      +'<td style="padding:6px 10px;text-align:right;color:var(--line-dk)">'+fmtNum(d.friends)+'</td>'
-      +'<td style="padding:6px 10px;text-align:right">'+(t.friends?fmtNum(t.friends):'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:6px 10px;text-align:right">'+(fp!=null?'<span style="color:'+(fp>=100?'var(--green)':'var(--dark)')+'">'+fp.toFixed(1)+'%</span>':'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:6px 10px;text-align:right;color:var(--orange-dk)">'+fmtNum(d.validFriends)+'</td>'
-      +'<td style="padding:6px 10px;text-align:right">'+(t.valid?fmtNum(t.valid):'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:6px 10px;text-align:right">'+(vp!=null?'<span style="color:'+(vp>=100?'var(--green)':'var(--dark)')+'">'+vp.toFixed(1)+'%</span>':'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'</tr>';
-  });
-  document.getElementById('targetAchieveSummary').innerHTML='<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">'
-    +'<div style="font-size:11px;font-weight:800;color:var(--dark3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">各月達成狀況</div>'
-    +'<table style="width:100%;border-collapse:collapse;font-size:12px">'
-    +'<thead><tr style="background:var(--bg2)">'
-    +'<th style="padding:6px 10px;text-align:left">月份</th>'
-    +'<th style="padding:6px 10px;text-align:right;color:var(--line-dk)">加入好友</th>'
-    +'<th style="padding:6px 10px;text-align:right">目標</th>'
-    +'<th style="padding:6px 10px;text-align:right">達成率</th>'
-    +'<th style="padding:6px 10px;text-align:right;color:var(--orange-dk)">有效好友</th>'
-    +'<th style="padding:6px 10px;text-align:right">目標</th>'
-    +'<th style="padding:6px 10px;text-align:right">達成率</th>'
-    +'</tr></thead><tbody>'+sumRows+'</tbody></table></div>';
-  document.getElementById('targetEditDlg').classList.add('open');
-}
-function addTargetRow(month,friends,valid){
-  const mv=month?month.replace('.','-'):'';
-  const row=document.createElement('tr');
-  row.style.borderBottom='1px solid var(--border)';
-  row.innerHTML=`<td style="padding:6px 8px"><input type="month" class="field-inp" style="padding:5px 8px;font-size:12px;width:100%" value="${mv}"></td>
-    <td style="padding:6px 8px"><input type="number" class="field-inp field-num" style="padding:5px 8px;font-size:12px;width:100%" value="${friends!=null?friends:''}"></td>
-    <td style="padding:6px 8px"><input type="number" class="field-inp field-num" style="padding:5px 8px;font-size:12px;width:100%" value="${valid!=null?valid:''}"></td>
-    <td style="padding:6px 4px;text-align:center"><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#e53e3e;cursor:pointer;font-size:15px;line-height:1;padding:2px 6px">✕</button></td>`;
-  document.getElementById('targetTableBody').appendChild(row);
-}
-function closeTargetDlg(){document.getElementById('targetEditDlg').classList.remove('open')}
-function saveTargetEdit(){
-  const rows=document.getElementById('targetTableBody').querySelectorAll('tr');
-  const targets={};
-  rows.forEach(row=>{
-    const ins=row.querySelectorAll('input');
-    const raw=ins[0].value;
-    const m=raw?raw.replace(/^(\d{4})-(\d{2})$/,'$1.$2'):null;
-    const friends=parseFloat(ins[1].value)||null;
-    const valid=parseFloat(ins[2].value)||null;
-    if(m) targets[m]={friends,valid};
-  });
-  appData.monthlyTargets=targets;
-  save();closeTargetDlg();renderPage();
-}
-
 // ── DELETE MONTH ──────────────────────────────────────
 function deleteMonth(month){
   if(!confirm(`確定要刪除「${month}」月份？此操作無法復原。`))return;
@@ -777,7 +690,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(modalCtx!==null)closeModal();
     else if(document.getElementById('monthEditDlg').classList.contains('open'))closeMonthEditDlg();
-    else if(document.getElementById('targetEditDlg').classList.contains('open'))closeTargetDlg();
     else if(document.getElementById('addMonthDlg').classList.contains('open'))closeAddMonthDlg();
     else if(selectedSlot)clearSlot();
   }
@@ -964,80 +876,11 @@ function renderOverview(){
     </div>`;
   }
 
-  // ── 好友成長目標 ──
-  const latest=latestMonth?getMonthOv(latestMonth):null;
-  const fa=latest?.friends||0;
-  const va=latest?.validFriends||0;
-  const mt=appData.monthlyTargets||{};
-  const allTargetEntries=Object.entries(mt).sort((a,b)=>a[0].localeCompare(b[0]));
-  const today=new Date().toISOString().slice(0,7).replace('-','.');
-  const upcoming=allTargetEntries.filter(([m])=>m>=today);
-  const [nm,ntVals]=upcoming[0]||allTargetEntries[allTargetEntries.length-1]||[null,null];
-  const ft=ntVals?.friends||null;
-  const vt=ntVals?.valid||null;
-  const dispNm=nm||'—';
-  const fp=ft?Math.min(100,fa/ft*100):0;
-  const vp=vt?Math.min(100,va/vt*100):0;
-  const editTargetBtn=editMode?`<button class="kpi-edit-btn" style="margin-left:auto;color:var(--line-dk)" onclick="openTargetDlg()">${IC.pencil} 設定目標</button>`:'';
-  const yearBtn=`<button class="cnt teal-cnt" style="cursor:pointer;border:none;background:none;font:inherit;margin-left:8px" onclick="openYearlyModal()">${IC.barChart} 年度成效</button>`;
-  let targetsSection='';
-  if(editMode){
-    const tableHtml=allTargetEntries.length===0
-      ?'<div style="color:var(--dark3);font-size:12px;padding:10px 0">開啟「設定目標」新增月份目標</div>'
-      :'<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg2)"><th style="padding:6px 10px;text-align:left;font-weight:700;color:var(--dark3)">月份</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--line-dk)">加入好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--orange-dk)">有效好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th></tr></thead><tbody>'+allTargetEntries.map(([m,t])=>{
-        const d=getMonthOv(m);
-        const fr=t.friends&&d.friends!=null?(d.friends/t.friends*100).toFixed(1)+'%':'—';
-        const vr=t.valid&&d.validFriends!=null?(d.validFriends/t.valid*100).toFixed(1)+'%':'—';
-        const isCur=m===dispNm;
-        const rs=isCur?'background:rgba(58,194,207,.07);font-weight:600':'';
-        const curTag=isCur?' <span style="font-size:10px;background:var(--line);color:#fff;border-radius:3px;padding:1px 5px">最近目標</span>':'';
-        return '<tr style="border-bottom:1px solid var(--border);'+rs+'"><td style="padding:7px 10px">'+m+curTag+'</td>'
-          +'<td style="padding:7px 10px;text-align:right;color:var(--line-dk)">'+fmtNum(t.friends)+'</td>'
-          +'<td style="padding:7px 10px;text-align:right">'+(d.friends!=null?fmtNum(d.friends):'—')+'</td>'
-          +'<td style="padding:7px 10px;text-align:right;color:'+(t.friends&&d.friends>=t.friends?'var(--green)':'var(--dark3)')+'">'+fr+'</td>'
-          +'<td style="padding:7px 10px;text-align:right;color:var(--orange-dk)">'+fmtNum(t.valid)+'</td>'
-          +'<td style="padding:7px 10px;text-align:right">'+(d.validFriends!=null?fmtNum(d.validFriends):'—')+'</td>'
-          +'<td style="padding:7px 10px;text-align:right;color:'+(t.valid&&d.validFriends>=t.valid?'var(--green)':'var(--dark3)')+'">'+vr+'</td></tr>';
-      }).join('')+'</tbody></table>';
-    targetsSection='<div style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px"><div style="font-size:11px;font-weight:800;color:var(--dark3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">各月目標總覽</div>'+tableHtml+'</div>';
-  }
-  html+=`<div class="sec neutral" style="margin-top:4px"><h2>好友成長目標</h2>${yearBtn}${editTargetBtn}</div>
-  <div class="follower-progress">
-    <div class="fp-grid">
-      <div>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-          <div style="width:24px;height:24px;border-radius:6px;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center">${IC.users}</div>
-          <span style="font-size:13px;font-weight:800">加入好友（前台好友總數）</span>
-        </div>
-        <div class="fp-stats">
-          <div class="fp-stat"><div class="fp-stat-val c-line">${fmtNum(fa)}</div><div class="fp-stat-lbl">目前好友</div></div>
-          <div class="fp-stat"><div style="font-size:16px;color:var(--dark3);padding-top:6px">→</div></div>
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--dark3)">${ft?fmtNum(ft):'未設定'}</div><div class="fp-stat-lbl">目標(${dispNm})</div></div>
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--line-dk)">${ft?fp.toFixed(1)+'%':'—'}</div><div class="fp-stat-lbl">達成率</div></div>
-        </div>
-        <div class="fp-bar"><div class="fp-fill" style="width:${fp}%"></div></div>
-      </div>
-      <div>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-          <div style="width:24px;height:24px;border-radius:6px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center">${IC.users}</div>
-          <span style="font-size:13px;font-weight:800">有效好友（目標好友數）</span>
-        </div>
-        <div class="fp-stats">
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--orange-dk)">${fmtNum(va)}</div><div class="fp-stat-lbl">目前有效好友</div></div>
-          <div class="fp-stat"><div style="font-size:16px;color:var(--dark3);padding-top:6px">→</div></div>
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--dark3)">${vt?fmtNum(vt):'未設定'}</div><div class="fp-stat-lbl">目標(${dispNm})</div></div>
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--orange-dk)">${vt?vp.toFixed(1)+'%':'—'}</div><div class="fp-stat-lbl">達成率</div></div>
-        </div>
-        <div class="fp-bar"><div class="fp-fill fp-fill-valid" style="width:${vp}%"></div></div>
-      </div>
-    </div>
-    ${targetsSection}
-  </div>`;
 
   html+=`<div class="sec neutral"><h2>好友成長趨勢</h2></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px" class="charts-grid">
-    <div class="chart-card"><h3 style="color:var(--line-dk)">${IC.users} 加入好友成長</h3><p>實際 vs 目標</p><canvas id="cFriendGrowth" height="220"></canvas></div>
-    <div class="chart-card"><h3 style="color:var(--orange-dk)">${IC.users} 有效好友趨勢</h3><p>實際 vs 目標</p><canvas id="cValidGrowth" height="220"></canvas></div>
+    <div class="chart-card"><h3 style="color:var(--line-dk)">${IC.users} 加入好友成長</h3><p>每月加入好友總數(前台)</p><canvas id="cFriendGrowth" height="220"></canvas></div>
+    <div class="chart-card"><h3 style="color:var(--orange-dk)">${IC.users} 有效好友趨勢</h3><p>每月有效好友數(目標好友數)</p><canvas id="cValidGrowth" height="220"></canvas></div>
   </div>`;
   html+=`<div class="sec neutral"><h2>趨勢圖表</h2></div>
   <div class="charts-grid">
@@ -1059,16 +902,11 @@ function renderOverview(){
       scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:11},callback:v=>pct?v+'%':(v>=10000?(v/10000).toFixed(1)+'萬':v.toLocaleString())}}}});
     const mk=(id,cfg)=>{const ctx=document.getElementById(id)?.getContext('2d');if(ctx)charts[id]=new Chart(ctx,cfg);};
 
-    // growth charts incl. future target months
-    const mt2=appData.monthlyTargets||{};
-    const gcMonths=[...new Set([...months,...Object.keys(mt2)])].sort((a,b)=>a.localeCompare(b));
-    mk('cFriendGrowth',{type:'line',data:{labels:gcMonths,datasets:[
-      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).friends),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
-      {label:'目標',data:gcMonths.map(m=>mt2[m]?.friends||null),borderColor:'rgba(58,194,207,.5)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
+    mk('cFriendGrowth',{type:'line',data:{labels:months,datasets:[
+      {label:'加入好友',data:months.map(m=>getMonthOv(m).friends),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2},
     ]},options:baseOpts(false)});
-    mk('cValidGrowth',{type:'line',data:{labels:gcMonths,datasets:[
-      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).validFriends),borderColor:ORANGE_C,backgroundColor:'rgba(250,166,52,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
-      {label:'目標',data:gcMonths.map(m=>mt2[m]?.valid||null),borderColor:'rgba(250,166,52,.55)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
+    mk('cValidGrowth',{type:'line',data:{labels:months,datasets:[
+      {label:'有效好友',data:months.map(m=>getMonthOv(m).validFriends),borderColor:ORANGE_C,backgroundColor:'rgba(250,166,52,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2},
     ]},options:baseOpts(false)});
 
     // monthly deltas
@@ -1271,70 +1109,6 @@ function confirmNewMsg(month){
   if(newCar)newCar.scrollLeft=savedScroll;
 }
 
-// ── YEARLY MODAL ──────────────────────────────────────
-function openYearlyModal(){
-  const mt=appData.monthlyTargets||{};
-  const months=ovMonths().slice().reverse(); // newest first
-  let rows='';
-  months.forEach(m=>{
-    const d=getMonthOv(m);
-    const t=mt[m]||{};
-    const fp=t.friends&&d.friends!=null?(d.friends/t.friends*100):null;
-    const vp=t.valid&&d.validFriends!=null?(d.validFriends/t.valid*100):null;
-    const fBar=fp!=null?'<div style="height:4px;background:var(--bg2);border-radius:2px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,fp).toFixed(0)+'%;background:var(--line);border-radius:2px"></div></div>':'';
-    const vBar=vp!=null?'<div style="height:4px;background:var(--bg2);border-radius:2px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,vp).toFixed(0)+'%;background:var(--orange);border-radius:2px"></div></div>':'';
-    const fCell=editMode
-      ?'<td style="padding:7px 8px"><input type="number" data-month="'+m+'" data-f="friends" class="yr-inp field-inp field-num" style="padding:4px 7px;font-size:12px;width:100px;text-align:right" value="'+(t.friends||'')+'"></td>'
-      :'<td style="padding:7px 10px;text-align:right">'+(t.friends?fmtNum(t.friends):'<span style="color:var(--dark3)">—</span>')+'</td>';
-    const vCell=editMode
-      ?'<td style="padding:7px 8px"><input type="number" data-month="'+m+'" data-f="valid" class="yr-inp field-inp field-num" style="padding:4px 7px;font-size:12px;width:100px;text-align:right" value="'+(t.valid||'')+'"></td>'
-      :'<td style="padding:7px 10px;text-align:right">'+(t.valid?fmtNum(t.valid):'<span style="color:var(--dark3)">—</span>')+'</td>';
-    rows+='<tr style="border-bottom:1px solid var(--border)">'
-      +'<td style="padding:11px 16px;font-weight:700;white-space:nowrap">'+m+'</td>'
-      +'<td style="padding:11px 16px;text-align:right;color:var(--line-dk)">'+fmtNum(d.friends)+'</td>'
-      +fCell
-      +'<td style="padding:11px 16px;text-align:right;min-width:80px">'+(fp!=null?'<span style="color:'+(fp>=100?'var(--green)':'var(--dark)')+';font-weight:700">'+fp.toFixed(1)+'%</span>'+fBar:'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:11px 16px;text-align:right;color:var(--orange-dk)">'+fmtNum(d.validFriends)+'</td>'
-      +vCell
-      +'<td style="padding:11px 16px;text-align:right;min-width:80px">'+(vp!=null?'<span style="color:'+(vp>=100?'var(--green)':'var(--dark)')+';font-weight:700">'+vp.toFixed(1)+'%</span>'+vBar:'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'</tr>';
-  });
-  const saveBtn=editMode?'<div style="padding:14px 24px;border-top:1px solid var(--border);text-align:right"><button onclick="saveYearlyTargets()" style="background:var(--line);color:#fff;border:none;border-radius:7px;padding:8px 22px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">儲存目標</button></div>':'';
-  const body='<div style="overflow:auto;flex:1;padding:20px 24px">'
-    +'<table style="width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap">'
-    +'<thead><tr style="background:var(--bg2);border-bottom:2px solid var(--border)">'
-    +'<th style="padding:10px 16px;text-align:left;font-weight:700">月份</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--line-dk)">加入好友</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">目標</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--orange-dk)">有效好友</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">目標</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th>'
-    +'</tr></thead>'
-    +'<tbody>'+rows+'</tbody>'
-    +'</table></div>'+saveBtn;
-  document.getElementById('modalTitle').innerHTML=`${IC.barChart} 年度好友成長總覽${editMode?' <span style="font-size:11px;font-weight:400;color:var(--dark3)">（目標欄位可直接編輯）</span>':''}`;
-  document.getElementById('modalBody').style.flexDirection='column';
-  document.getElementById('modalBody').innerHTML=body;
-  document.getElementById('modalBackdrop').classList.add('open');
-  modalCtx=null;
-}
-function saveYearlyTargets(){
-  const inputs=document.querySelectorAll('.yr-inp');
-  const targets=Object.assign({},appData.monthlyTargets||{});
-  inputs.forEach(inp=>{
-    const m=inp.dataset.month;
-    const f=inp.dataset.f;
-    const v=parseFloat(inp.value)||null;
-    if(!targets[m])targets[m]={friends:null,valid:null};
-    targets[m][f]=v;
-  });
-  Object.keys(targets).forEach(m=>{if(!targets[m].friends&&!targets[m].valid)delete targets[m];});
-  appData.monthlyTargets=targets;
-  save();
-  showToast('目標已儲存');
-  openYearlyModal();
-}
 function closeModal(){document.getElementById('modalBackdrop').classList.remove('open');modalCtx=null;clearSlot()}
 function handleBackdropClick(e){if(e.target===document.getElementById('modalBackdrop'))closeModal()}
 
