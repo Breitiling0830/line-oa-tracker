@@ -11,9 +11,9 @@
   --teal:#3AC2CF;--teal-dk:#2aa8b4;--teal-lt:#eaf9fb;--teal-md:#c0ecf0;
   --orange:#FAA634;--orange-dk:#e8940f;--orange-lt:#fff8ed;
   --red:#F04D29;--red-lt:#fff0ec;--red-dk:#d63d1c;
-  --line:#06C755;--line-dk:#05a648;--line-lt:#e9faf0;--line-md:#bdeed1;
+  --line:#3AC2CF;--line-dk:#2aa8b4;--line-lt:#eaf9fb;--line-md:#c0ecf0;
   --dark:#3E454D;--dark2:#6c757d;--dark3:#adb5bd;
-  --green:#05a648;
+  --green:#2aa8b4;
   --bg:#F2F4F6;--bg2:#f7f9fa;--white:#fff;--border:#E2E5E8;
   --shadow:0 1px 8px rgba(62,69,77,.08);--shadow-md:0 4px 20px rgba(62,69,77,.13);
   --r:12px;--r-sm:8px;
@@ -23,7 +23,7 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-system,sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
 
-.brand-bar{height:5px;background:linear-gradient(to right,var(--line) 60%,var(--teal) 60%,var(--teal) 80%,var(--orange) 80%);position:sticky;top:0;z-index:300}
+.brand-bar{height:5px;background:linear-gradient(to right,var(--teal) 60%,var(--orange) 60%,var(--orange) 80%,var(--red) 80%);position:sticky;top:0;z-index:300}
 .header{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:5px;z-index:200;box-shadow:var(--shadow)}
 .hl{display:flex;align-items:center;gap:14px}
 .logo-img{height:26px}
@@ -88,7 +88,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .btn-delete-month{display:block;margin:32px auto 8px;background:none;border:1.5px solid #e53e3e;color:#e53e3e;border-radius:7px;padding:9px 28px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s,color .15s}
 .btn-delete-month:hover{background:#e53e3e;color:#fff}
 
-.insight-wrap{background:linear-gradient(135deg,var(--line-lt),#f4fef8);border:1px solid var(--line-md);border-left:5px solid var(--line);border-radius:var(--r-sm);padding:18px 22px;margin-bottom:22px}
+.insight-wrap{background:linear-gradient(135deg,var(--line-lt),#f4fdfe);border:1px solid var(--line-md);border-left:5px solid var(--line);border-radius:var(--r-sm);padding:18px 22px;margin-bottom:22px}
 .insight-lbl{font-size:10px;font-weight:800;color:var(--line-dk);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .insight-txt{font-size:13px;color:var(--dark);line-height:1.85;white-space:pre-wrap}
 .insight-inp{width:100%;background:var(--white);border:1.5px solid var(--line);color:var(--dark);border-radius:6px;padding:10px 12px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;display:block}
@@ -130,7 +130,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .pcard-add:hover{background:var(--line-lt)}
 
 .img-overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;gap:8px;z-index:5}
-@keyframes pulseBg{0%,100%{background:rgba(6,199,85,.85)}50%{background:rgba(6,199,85,.6)}}
+@keyframes pulseBg{0%,100%{background:rgba(58,194,207,.85)}50%{background:rgba(58,194,207,.65)}}
 
 .type-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
 .t-single{background:var(--line-lt);color:var(--line-dk)}
@@ -148,7 +148,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .fp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .fp-bar{height:10px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:6px}
 .fp-fill{height:100%;border-radius:10px;transition:width .6s ease;background:var(--line)}
-.fp-fill-valid{background:var(--teal)}
+.fp-fill-valid{background:var(--orange)}
 .fp-stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
 .fp-stat{text-align:center}
 .fp-stat-val{font-size:18px;font-weight:800}
@@ -187,7 +187,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .micro-row{display:flex;gap:8px;flex-wrap:wrap}
 .micro-chip{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--dark2);background:var(--bg);padding:6px 12px;border-radius:20px}
 .mc-k{font-size:10px;font-weight:700;color:var(--dark3);margin-right:2px}
-.modal-insight{background:linear-gradient(135deg,var(--line-lt),#f4fef8);border-left:4px solid var(--line);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;line-height:1.85;color:var(--dark);white-space:pre-wrap}
+.modal-insight{background:linear-gradient(135deg,var(--line-lt),#f4fdfe);border-left:4px solid var(--line);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;line-height:1.85;color:var(--dark);white-space:pre-wrap}
 .modal-preview{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;line-height:1.7;color:var(--dark2);white-space:pre-wrap}
 .btn-table{width:100%;border-collapse:collapse;font-size:12px}
 .btn-table th{padding:6px 10px;text-align:left;font-size:10px;font-weight:700;color:var(--dark3);background:var(--bg2)}
@@ -196,10 +196,10 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 /* edit form */
 .modal-img-slot{position:relative;cursor:pointer;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .modal-img-slot .img-overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;gap:8px;z-index:5}
-.modal-img-slot.slot-ready .img-overlay{display:flex;background:rgba(6,199,85,.85);animation:pulseBg 1.5s ease infinite}
+.modal-img-slot.slot-ready .img-overlay{display:flex;background:rgba(58,194,207,.85);animation:pulseBg 1.5s ease infinite}
 .field-lbl{font-size:10px;font-weight:700;color:var(--dark3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;display:flex;align-items:center;gap:4px}
 .field-inp{background:var(--white);border:1.5px solid var(--line);color:var(--dark);border-radius:6px;padding:6px 10px;font-size:13px;font-family:inherit;outline:none;width:100%}
-.field-inp:focus{box-shadow:0 0 0 3px rgba(6,199,85,.15)}
+.field-inp:focus{box-shadow:0 0 0 3px rgba(58,194,207,.15)}
 .field-num{text-align:right}
 .field-ro{background:var(--line-lt);color:var(--line-dk);font-weight:700;border-color:var(--line-md);cursor:default}
 select.field-inp{appearance:none;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236c757d'/%3E%3C/svg%3E") no-repeat right 10px center;padding-right:28px;cursor:pointer}
@@ -299,7 +299,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:14px 0}
         <thead><tr style="background:var(--bg2)">
           <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--dark3)">目標月份</th>
           <th style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--line-dk)">加入好友目標</th>
-          <th style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--teal-dk)">有效好友目標</th>
+          <th style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;color:var(--orange-dk)">有效好友目標</th>
           <th style="width:32px"></th>
         </tr></thead>
         <tbody id="targetTableBody"></tbody>
@@ -602,7 +602,7 @@ function openTargetDlg(){
       +'<td style="padding:6px 10px;text-align:right;color:var(--line-dk)">'+fmtNum(d.friends)+'</td>'
       +'<td style="padding:6px 10px;text-align:right">'+(t.friends?fmtNum(t.friends):'<span style="color:var(--dark3)">—</span>')+'</td>'
       +'<td style="padding:6px 10px;text-align:right">'+(fp!=null?'<span style="color:'+(fp>=100?'var(--green)':'var(--dark)')+'">'+fp.toFixed(1)+'%</span>':'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:6px 10px;text-align:right;color:var(--teal-dk)">'+fmtNum(d.validFriends)+'</td>'
+      +'<td style="padding:6px 10px;text-align:right;color:var(--orange-dk)">'+fmtNum(d.validFriends)+'</td>'
       +'<td style="padding:6px 10px;text-align:right">'+(t.valid?fmtNum(t.valid):'<span style="color:var(--dark3)">—</span>')+'</td>'
       +'<td style="padding:6px 10px;text-align:right">'+(vp!=null?'<span style="color:'+(vp>=100?'var(--green)':'var(--dark)')+'">'+vp.toFixed(1)+'%</span>':'<span style="color:var(--dark3)">—</span>')+'</td>'
       +'</tr>';
@@ -615,7 +615,7 @@ function openTargetDlg(){
     +'<th style="padding:6px 10px;text-align:right;color:var(--line-dk)">加入好友</th>'
     +'<th style="padding:6px 10px;text-align:right">目標</th>'
     +'<th style="padding:6px 10px;text-align:right">達成率</th>'
-    +'<th style="padding:6px 10px;text-align:right;color:var(--teal-dk)">有效好友</th>'
+    +'<th style="padding:6px 10px;text-align:right;color:var(--orange-dk)">有效好友</th>'
     +'<th style="padding:6px 10px;text-align:right">目標</th>'
     +'<th style="padding:6px 10px;text-align:right">達成率</th>'
     +'</tr></thead><tbody>'+sumRows+'</tbody></table></div>';
@@ -708,10 +708,8 @@ function computeBadges(msgs){
   const res={};
   const byRead=msgs.map((m,i)=>({i,v:calcReadRate(getMsgOverride(currentTab,i,m))||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
   const byCR=msgs.map((m,i)=>({i,v:calcClickRate(getMsgOverride(currentTab,i,m))||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
-  const byC=msgs.map((m,i)=>({i,v:getMsgOverride(currentTab,i,m).clicks||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
   byRead.slice(0,3).forEach(({i},r)=>{if(!res[i])res[i]={};res[i].read=r+1});
   byCR.slice(0,3).forEach(({i},r)=>{if(!res[i])res[i]={};res[i].cr=r+1});
-  byC.slice(0,3).forEach(({i},r)=>{if(!res[i])res[i]={};res[i].clicks=r+1});
   return res;
 }
 function badgeHtml(b){
@@ -719,7 +717,6 @@ function badgeHtml(b){
   let h='';
   if(b.read)h+=`<div class="badge badge-r${b.read}">${IC.eye} 已讀率 #${b.read}</div>`;
   if(b.cr)h+=`<div class="badge badge-r${b.cr}">${IC.click} 點擊率 #${b.cr}</div>`;
-  if(b.clicks)h+=`<div class="badge badge-r${b.clicks}">${IC.barChart} 點擊數 #${b.clicks}</div>`;
   return h?`<div class="badges">${h}</div>`:'';
 }
 
@@ -956,7 +953,7 @@ function renderOverview(){
       <div class="ov-ph"><div class="icon">${IC.line}</div><h3>LINE OA</h3></div>
       <div class="ov-stats">
         <div class="ov-stat"><div class="ov-stat-lbl">加入好友</div><div class="ov-stat-val c-line">${fmtNum(d.friends)}</div></div>
-        <div class="ov-stat"><div class="ov-stat-lbl">有效好友</div><div class="ov-stat-val" style="color:var(--teal-dk)">${fmtNum(d.validFriends)}</div></div>
+        <div class="ov-stat"><div class="ov-stat-lbl">有效好友</div><div class="ov-stat-val" style="color:var(--orange-dk)">${fmtNum(d.validFriends)}</div></div>
         <div class="ov-stat"><div class="ov-stat-lbl">封鎖率</div><div class="ov-stat-val" style="color:var(--red-dk)">${fmtRate(d.blockRate)}</div></div>
         <div class="ov-stat"><div class="ov-stat-lbl">互動總數</div><div class="ov-stat-val">${fmtNum(d.interactions)}</div></div>
         <div class="ov-stat"><div class="ov-stat-lbl">互動率</div><div class="ov-stat-val">${fmtRate(d.interRate)}</div></div>
@@ -987,18 +984,18 @@ function renderOverview(){
   if(editMode){
     const tableHtml=allTargetEntries.length===0
       ?'<div style="color:var(--dark3);font-size:12px;padding:10px 0">開啟「設定目標」新增月份目標</div>'
-      :'<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg2)"><th style="padding:6px 10px;text-align:left;font-weight:700;color:var(--dark3)">月份</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--line-dk)">加入好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--teal-dk)">有效好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th></tr></thead><tbody>'+allTargetEntries.map(([m,t])=>{
+      :'<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--bg2)"><th style="padding:6px 10px;text-align:left;font-weight:700;color:var(--dark3)">月份</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--line-dk)">加入好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--orange-dk)">有效好友目標</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">實際</th><th style="padding:6px 10px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th></tr></thead><tbody>'+allTargetEntries.map(([m,t])=>{
         const d=getMonthOv(m);
         const fr=t.friends&&d.friends!=null?(d.friends/t.friends*100).toFixed(1)+'%':'—';
         const vr=t.valid&&d.validFriends!=null?(d.validFriends/t.valid*100).toFixed(1)+'%':'—';
         const isCur=m===dispNm;
-        const rs=isCur?'background:rgba(6,199,85,.06);font-weight:600':'';
+        const rs=isCur?'background:rgba(58,194,207,.07);font-weight:600':'';
         const curTag=isCur?' <span style="font-size:10px;background:var(--line);color:#fff;border-radius:3px;padding:1px 5px">最近目標</span>':'';
         return '<tr style="border-bottom:1px solid var(--border);'+rs+'"><td style="padding:7px 10px">'+m+curTag+'</td>'
           +'<td style="padding:7px 10px;text-align:right;color:var(--line-dk)">'+fmtNum(t.friends)+'</td>'
           +'<td style="padding:7px 10px;text-align:right">'+(d.friends!=null?fmtNum(d.friends):'—')+'</td>'
           +'<td style="padding:7px 10px;text-align:right;color:'+(t.friends&&d.friends>=t.friends?'var(--green)':'var(--dark3)')+'">'+fr+'</td>'
-          +'<td style="padding:7px 10px;text-align:right;color:var(--teal-dk)">'+fmtNum(t.valid)+'</td>'
+          +'<td style="padding:7px 10px;text-align:right;color:var(--orange-dk)">'+fmtNum(t.valid)+'</td>'
           +'<td style="padding:7px 10px;text-align:right">'+(d.validFriends!=null?fmtNum(d.validFriends):'—')+'</td>'
           +'<td style="padding:7px 10px;text-align:right;color:'+(t.valid&&d.validFriends>=t.valid?'var(--green)':'var(--dark3)')+'">'+vr+'</td></tr>';
       }).join('')+'</tbody></table>';
@@ -1022,14 +1019,14 @@ function renderOverview(){
       </div>
       <div>
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
-          <div style="width:24px;height:24px;border-radius:6px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center">${IC.users}</div>
+          <div style="width:24px;height:24px;border-radius:6px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center">${IC.users}</div>
           <span style="font-size:13px;font-weight:800">有效好友（目標好友數）</span>
         </div>
         <div class="fp-stats">
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--teal-dk)">${fmtNum(va)}</div><div class="fp-stat-lbl">目前有效好友</div></div>
+          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--orange-dk)">${fmtNum(va)}</div><div class="fp-stat-lbl">目前有效好友</div></div>
           <div class="fp-stat"><div style="font-size:16px;color:var(--dark3);padding-top:6px">→</div></div>
           <div class="fp-stat"><div class="fp-stat-val" style="color:var(--dark3)">${vt?fmtNum(vt):'未設定'}</div><div class="fp-stat-lbl">目標(${dispNm})</div></div>
-          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--teal-dk)">${vt?vp.toFixed(1)+'%':'—'}</div><div class="fp-stat-lbl">達成率</div></div>
+          <div class="fp-stat"><div class="fp-stat-val" style="color:var(--orange-dk)">${vt?vp.toFixed(1)+'%':'—'}</div><div class="fp-stat-lbl">達成率</div></div>
         </div>
         <div class="fp-bar"><div class="fp-fill fp-fill-valid" style="width:${vp}%"></div></div>
       </div>
@@ -1040,7 +1037,7 @@ function renderOverview(){
   html+=`<div class="sec neutral"><h2>好友成長趨勢</h2></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px" class="charts-grid">
     <div class="chart-card"><h3 style="color:var(--line-dk)">${IC.users} 加入好友成長</h3><p>實際 vs 目標</p><canvas id="cFriendGrowth" height="220"></canvas></div>
-    <div class="chart-card"><h3 style="color:var(--teal-dk)">${IC.users} 有效好友趨勢</h3><p>實際 vs 目標</p><canvas id="cValidGrowth" height="220"></canvas></div>
+    <div class="chart-card"><h3 style="color:var(--orange-dk)">${IC.users} 有效好友趨勢</h3><p>實際 vs 目標</p><canvas id="cValidGrowth" height="220"></canvas></div>
   </div>`;
   html+=`<div class="sec neutral"><h2>趨勢圖表</h2></div>
   <div class="charts-grid">
@@ -1052,7 +1049,7 @@ function renderOverview(){
   document.getElementById('main').innerHTML=html;
 
   setTimeout(()=>{
-    const LINE_C='#06C755',TEAL_C='#3AC2CF',ORANGE_C='#FAA634',RED_C='#F04D29';
+    const LINE_C='#3AC2CF',TEAL_C='#3AC2CF',ORANGE_C='#FAA634',RED_C='#F04D29';
     const baseOpts=(pct,dec=1)=>({responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'top',labels:{font:{size:12},boxWidth:14}},tooltip:{callbacks:{label:c=>{
         const v=c.parsed.y;
@@ -1066,12 +1063,12 @@ function renderOverview(){
     const mt2=appData.monthlyTargets||{};
     const gcMonths=[...new Set([...months,...Object.keys(mt2)])].sort((a,b)=>a.localeCompare(b));
     mk('cFriendGrowth',{type:'line',data:{labels:gcMonths,datasets:[
-      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).friends),borderColor:LINE_C,backgroundColor:'rgba(6,199,85,.1)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
-      {label:'目標',data:gcMonths.map(m=>mt2[m]?.friends||null),borderColor:'rgba(6,199,85,.45)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
+      {label:'實際',data:gcMonths.map(m=>getMonthOv(m).friends),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
+      {label:'目標',data:gcMonths.map(m=>mt2[m]?.friends||null),borderColor:'rgba(58,194,207,.5)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
     ]},options:baseOpts(false)});
     mk('cValidGrowth',{type:'line',data:{labels:gcMonths,datasets:[
       {label:'實際',data:gcMonths.map(m=>getMonthOv(m).validFriends),borderColor:TEAL_C,backgroundColor:'rgba(58,194,207,.1)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,borderWidth:2,spanGaps:false},
-      {label:'目標',data:gcMonths.map(m=>mt2[m]?.valid||null),borderColor:'rgba(58,194,207,.5)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
+      {label:'目標',data:gcMonths.map(m=>mt2[m]?.valid||null),borderColor:'rgba(250,166,52,.55)',backgroundColor:'transparent',tension:.35,fill:false,pointRadius:3,borderWidth:2,borderDash:[5,4],spanGaps:true},
     ]},options:baseOpts(false)});
 
     // monthly deltas
@@ -1081,15 +1078,15 @@ function renderOverview(){
       return(cur!=null&&prev!=null)?cur-prev:null;
     });
     mk('cNet',{type:'bar',data:{labels:dm,datasets:[
-      {label:'新增好友',data:delta('friends'),backgroundColor:'rgba(6,199,85,.75)',borderRadius:4},
+      {label:'新增好友',data:delta('friends'),backgroundColor:'rgba(58,194,207,.75)',borderRadius:4},
       {label:'新增封鎖',data:delta('blocks'),backgroundColor:'rgba(240,77,41,.65)',borderRadius:4},
     ]},options:baseOpts(false)});
     mk('cRates',{type:'line',data:{labels:months,datasets:[
-      {label:'平均已讀率',data:months.map(m=>{const v=getMonthOv(m).avgReadRate;return v!=null?+(v*100).toFixed(1):null}),borderColor:LINE_C,backgroundColor:'rgba(6,199,85,.1)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
+      {label:'平均已讀率',data:months.map(m=>{const v=getMonthOv(m).avgReadRate;return v!=null?+(v*100).toFixed(1):null}),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
       {label:'平均點擊率',data:months.map(m=>{const v=getMonthOv(m).avgClickRate;return v!=null?+(v*100).toFixed(1):null}),borderColor:ORANGE_C,backgroundColor:'rgba(250,166,52,.1)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(true)});
     mk('cInter',{type:'line',data:{labels:months,datasets:[
-      {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),borderColor:LINE_C,backgroundColor:'rgba(6,199,85,.1)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
+      {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(false)});
     mk('cInterRate',{type:'line',data:{labels:months,datasets:[
       {label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:TEAL_C,backgroundColor:'rgba(58,194,207,.1)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
@@ -1285,7 +1282,7 @@ function openYearlyModal(){
     const fp=t.friends&&d.friends!=null?(d.friends/t.friends*100):null;
     const vp=t.valid&&d.validFriends!=null?(d.validFriends/t.valid*100):null;
     const fBar=fp!=null?'<div style="height:4px;background:var(--bg2);border-radius:2px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,fp).toFixed(0)+'%;background:var(--line);border-radius:2px"></div></div>':'';
-    const vBar=vp!=null?'<div style="height:4px;background:var(--bg2);border-radius:2px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,vp).toFixed(0)+'%;background:var(--teal);border-radius:2px"></div></div>':'';
+    const vBar=vp!=null?'<div style="height:4px;background:var(--bg2);border-radius:2px;margin-top:3px"><div style="height:100%;width:'+Math.min(100,vp).toFixed(0)+'%;background:var(--orange);border-radius:2px"></div></div>':'';
     const fCell=editMode
       ?'<td style="padding:7px 8px"><input type="number" data-month="'+m+'" data-f="friends" class="yr-inp field-inp field-num" style="padding:4px 7px;font-size:12px;width:100px;text-align:right" value="'+(t.friends||'')+'"></td>'
       :'<td style="padding:7px 10px;text-align:right">'+(t.friends?fmtNum(t.friends):'<span style="color:var(--dark3)">—</span>')+'</td>';
@@ -1297,7 +1294,7 @@ function openYearlyModal(){
       +'<td style="padding:11px 16px;text-align:right;color:var(--line-dk)">'+fmtNum(d.friends)+'</td>'
       +fCell
       +'<td style="padding:11px 16px;text-align:right;min-width:80px">'+(fp!=null?'<span style="color:'+(fp>=100?'var(--green)':'var(--dark)')+';font-weight:700">'+fp.toFixed(1)+'%</span>'+fBar:'<span style="color:var(--dark3)">—</span>')+'</td>'
-      +'<td style="padding:11px 16px;text-align:right;color:var(--teal-dk)">'+fmtNum(d.validFriends)+'</td>'
+      +'<td style="padding:11px 16px;text-align:right;color:var(--orange-dk)">'+fmtNum(d.validFriends)+'</td>'
       +vCell
       +'<td style="padding:11px 16px;text-align:right;min-width:80px">'+(vp!=null?'<span style="color:'+(vp>=100?'var(--green)':'var(--dark)')+';font-weight:700">'+vp.toFixed(1)+'%</span>'+vBar:'<span style="color:var(--dark3)">—</span>')+'</td>'
       +'</tr>';
@@ -1310,7 +1307,7 @@ function openYearlyModal(){
     +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--line-dk)">加入好友</th>'
     +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">目標</th>'
     +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th>'
-    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--teal-dk)">有效好友</th>'
+    +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--orange-dk)">有效好友</th>'
     +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">目標</th>'
     +'<th style="padding:10px 16px;text-align:right;font-weight:700;color:var(--dark3)">達成率</th>'
     +'</tr></thead>'
