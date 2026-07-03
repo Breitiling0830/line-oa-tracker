@@ -341,14 +341,24 @@ const fmtDate=d=>{if(!d)return'—';const m=String(d).match(/^(\d{4})-(\d{2})-(\
 const fmtRate=(r,dec=1)=>(r===null||r===undefined||r==='')?'—':(r*100).toFixed(dec)+'%';
 const chgHtml=p=>(p===null||p===undefined)?'<span class="neu">—</span>':p>0?`<span class="up">▲${(p*100).toFixed(1)}%</span>`:p<0?`<span class="dn">▼${(Math.abs(p)*100).toFixed(1)}%</span>`:'<span class="neu">0%</span>';
 
-function typeBadge(t){
+function normType(t){
   if(!t)return'';
-  const cls=t.includes('多圖')?'t-multi':t.includes('長圖')?'t-long':t.includes('文')&&t.includes('圖')?'t-textimg':t.includes('單圖')?'t-single':'t-text';
-  return`<span class="type-badge ${cls}">${esc(t)}</span>`;
+  if(t.includes('文')&&t.includes('圖'))return'文+圖';
+  if(t.includes('卡片')||t.includes('多圖'))return'卡片';
+  if(t.includes('圖'))return'圖片';
+  return'文字';
+}
+function typeBadge(t){
+  const nt=normType(t);
+  if(!nt)return'';
+  const cls=nt==='卡片'?'t-multi':nt==='文+圖'?'t-textimg':nt==='圖片'?'t-single':'t-text';
+  return`<span class="type-badge ${cls}">${esc(nt)}</span>`;
 }
 // 已讀率 = 已讀人數/發送總數;點擊率 = 連結點擊數/已讀人數
 function calcReadRate(m){return(m.reads!=null&&m.sent)?m.reads/m.sent:(m.readRate??null)}
-function calcClickRate(m){return(m.clicks!=null&&m.reads)?m.clicks/m.reads:(m.clickRate??null)}
+function btnSum(m){const b=m.buttons;return(b&&b.length)?b.reduce((a,x)=>a+(+x||0),0):null}
+function getClicks(m){return m.clicks!=null?m.clicks:btnSum(m)}
+function calcClickRate(m){const c=getClicks(m);return(c!=null&&m.reads)?c/m.reads:(m.clickRate??null)}
 
 // ── STORAGE HELPERS ───────────────────────────────────
 function getImg(month,idx){return appData.images?.[`${month}_${idx}`]||IMG_MAP[`${month}_${idx}`]||null}
@@ -766,7 +776,7 @@ function msgCard(msg,idx,month,badges){
       <div class="pcard-stats">
         <div><div class="ps-lbl">發送</div><div class="ps-val">${fmtNum(m.sent)}</div></div>
         <div><div class="ps-lbl">已讀率</div><div class="ps-val c-line">${fmtRate(readRate)}</div></div>
-        <div><div class="ps-lbl">點擊數</div><div class="ps-val">${fmtNum(m.clicks)}</div></div>
+        <div><div class="ps-lbl">點擊數</div><div class="ps-val">${fmtNum(getClicks(m))}</div></div>
         <div><div class="ps-lbl">點擊率</div><div class="ps-val" style="color:var(--orange-dk)">${fmtRate(clickRate)}</div></div>
       </div>
       <div class="pcard-footer">
@@ -915,7 +925,8 @@ function renderOverview(){
 
 // ── MESSAGE EDIT FORM ─────────────────────────────────
 function buildEditForm(msg,month,idx,isNew){
-  const typeOpts=['單圖','多圖','多圖(2頁)','長圖','文+圖','純文字'].map(t=>`<option value="${t}"${(msg.type||'')==t?' selected':''}>${t}</option>`).join('');
+  const curType=normType(msg.type)||'圖片';
+  const typeOpts=['圖片','卡片','文字','文+圖'].map(t=>`<option value="${t}"${curType==t?' selected':''}>${t}</option>`).join('');
   const [mYr,mMo]=month.split('.');
   const minDate=`${mYr}-${mMo}-01`;
   const lastDay=new Date(parseInt(mYr),parseInt(mMo),0).getDate();
@@ -953,8 +964,8 @@ function buildEditForm(msg,month,idx,isNew){
       <div><div class="field-lbl">點擊率（點擊÷已讀,自動）</div><input class="field-inp field-ro" id="ef_clickRate" readonly tabindex="-1" value="${fmtRate(calcClickRate(msg))}"></div>
     </div>
     <div style="margin-top:8px">
-      <div class="field-lbl">各按鈕點擊數（逗號分隔,如 363,318）</div>
-      <input class="field-inp" id="ef_buttons" value="${esc((msg.buttons||[]).join(', '))}">
+      <div class="field-lbl">各按鈕點擊數（逗號分隔,如 363,318 — 會自動加總為連結點擊數）</div>
+      <input class="field-inp" id="ef_buttons" value="${esc((msg.buttons||[]).join(', '))}" oninput="syncClicksFromButtons()">
     </div>
     <hr class="div">
     <div class="modal-section-lbl">訊息洞察（選填）</div>
@@ -965,6 +976,15 @@ function buildEditForm(msg,month,idx,isNew){
         ${!isNew?`<button class="btn-delete-post" onclick="deleteMsg('${month}',${idx})" title="刪除訊息">🗑 刪除</button>`:''}
       </div>
     </div>`;
+}
+function syncClicksFromButtons(){
+  const raw=document.getElementById('ef_buttons')?.value||'';
+  const nums=raw.split(/[,，]/).map(x=>parseFloat(x.trim())).filter(n=>!isNaN(n));
+  if(nums.length){
+    const el=document.getElementById('ef_clicks');
+    if(el)el.value=nums.reduce((a,b)=>a+b,0);
+  }
+  refreshMsgRates();
 }
 function refreshMsgRates(){
   const s=parseFloat(document.getElementById('ef_sent')?.value)||0;
@@ -978,8 +998,10 @@ function refreshMsgRates(){
 function readEditFields(){
   const nv=id=>{const v=document.getElementById(id)?.value;return(v===''||v===undefined)?null:(isNaN(Number(v))?null:Number(v))};
   const sv=id=>document.getElementById(id)?.value?.trim()||'';
-  const sent=nv('ef_sent'),reads=nv('ef_reads'),clicks=nv('ef_clicks');
+  const sent=nv('ef_sent'),reads=nv('ef_reads');
+  let clicks=nv('ef_clicks');
   const buttons=sv('ef_buttons').split(/[,，]/).map(s=>parseFloat(s.trim())).filter(n=>!isNaN(n));
+  if(clicks==null&&buttons.length)clicks=buttons.reduce((a,b)=>a+b,0);
   return{
     date:sv('ef_date'),topic:sv('ef_topic'),type:sv('ef_type'),preview:sv('ef_preview'),
     sent,reads,clicks,buttons,
@@ -1011,8 +1033,9 @@ function openMsgModal(month,idx){
     infoHtml=buildEditForm(m,month,idx,false);
   }else{
     let btnRows='';
+    const totalClicks=getClicks(m);
     (m.buttons||[]).forEach((b,i)=>{
-      const pct=m.clicks?b/m.clicks*100:null;
+      const pct=totalClicks?b/totalClicks*100:null;
       btnRows+=`<tr><td>按鈕 ${i+1}</td><td style="text-align:right;font-weight:700">${fmtNum(b)}</td><td style="text-align:right;color:var(--dark3)">${pct!=null?pct.toFixed(1)+'%':'—'}</td></tr>`;
     });
     infoHtml=`
@@ -1028,7 +1051,7 @@ function openMsgModal(month,idx){
       </div>
       <div class="micro-row" style="margin-top:10px">
         <span class="micro-chip">${IC.eye}<span class="mc-k">已讀人數</span>${fmtNum(m.reads)}</span>
-        <span class="micro-chip">${IC.click}<span class="mc-k">連結點擊</span>${fmtNum(m.clicks)}</span>
+        <span class="micro-chip">${IC.click}<span class="mc-k">連結點擊</span>${fmtNum(getClicks(m))}</span>
       </div>
       ${btnRows?`<hr class="div"><div class="modal-section-lbl">按鈕點擊明細</div><table class="btn-table"><thead><tr><th>按鈕</th><th style="text-align:right">點擊數</th><th style="text-align:right">佔比</th></tr></thead><tbody>${btnRows}</tbody></table>`:''}
       ${insight?`<hr class="div"><div class="modal-section-lbl">訊息洞察</div><div class="modal-insight">${esc(insight)}</div>`:''}`;
@@ -1070,7 +1093,7 @@ function deleteMsg(month,idx){
 // ── NEW MESSAGE ───────────────────────────────────────
 function openNewMsgModal(month){
   document.getElementById('modalTitle').innerHTML=`<span class="plat-badge plat-line">${IC.line} LINE</span> 新增推播訊息`;
-  const empty={date:'',topic:'',preview:'',type:'單圖',sent:null,reads:null,clicks:null,buttons:[],insight:''};
+  const empty={date:'',topic:'',preview:'',type:'圖片',sent:null,reads:null,clicks:null,buttons:[],insight:''};
   const infoHtml=buildEditForm(empty,month,-1,true);
   document.getElementById('modalBody').style.flexDirection='';
   document.getElementById('modalBody').innerHTML=`<div class="modal-img-col"><div class="modal-img-ph">${IC.camera}<span>儲存後可貼上圖片</span></div></div><div class="modal-info">${infoHtml}</div>`;
