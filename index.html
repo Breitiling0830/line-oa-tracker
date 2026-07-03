@@ -907,6 +907,7 @@ function renderOverview(){
     <div class="chart-card"><h3>每月新增好友 vs 新增封鎖 vs 淨增加</h3><p>淨增加＝新增好友－新增封鎖</p><canvas id="cNet" height="200"></canvas></div>
     <div class="chart-card"><h3>LINE 互動總數</h3><p>每月互動總數</p><canvas id="cInter" height="200"></canvas></div>
     <div class="chart-card"><h3>互動率</h3><p>互動總數 ÷ 有效好友</p><canvas id="cInterRate" height="200"></canvas></div>
+    <div class="chart-card"><h3>封鎖率</h3><p>封鎖數 ÷ 加入好友</p><canvas id="cBlockRate" height="200"></canvas></div>
   </div>`;
   document.getElementById('main').innerHTML=html;
 
@@ -949,6 +950,9 @@ function renderOverview(){
     ]},options:baseOpts(false)});
     mk('cInterRate',{type:'line',data:{labels:months,datasets:[
       {label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:RED_C,backgroundColor:'rgba(240,77,41,.08)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
+    ]},options:baseOpts(true,2)});
+    mk('cBlockRate',{type:'line',data:{labels:months,datasets:[
+      {label:'封鎖率',data:months.map(m=>{const v=getMonthOv(m).blockRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:'#d63d1c',backgroundColor:'rgba(214,61,28,.08)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(true,2)});
   },100);
 }
