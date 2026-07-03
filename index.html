@@ -64,7 +64,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .platform-header h3{font-size:14px;font-weight:800}
 .platform-header .rate-chip-hdr{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;background:var(--line-lt);color:var(--line-dk)}
 
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);gap:0}
 .kpi-edit-btn{margin-left:auto;background:none;border:1.5px solid currentColor;border-radius:5px;padding:3px 10px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;display:inline-flex;align-items:center;gap:4px;opacity:.75;transition:opacity .15s}
 .kpi-edit-btn:hover{opacity:1}
 .kpi-cell{padding:14px 10px;text-align:center;border-right:1px solid var(--border)}
@@ -157,7 +157,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Noto Sans TC',-apple-sy
 .ov-ph{padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
 .ov-ph .icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--line);color:#fff}
 .ov-ph h3{font-size:13px;font-weight:800}
-.ov-stats{display:grid;grid-template-columns:repeat(5,1fr)}
+.ov-stats{display:grid;grid-template-columns:repeat(8,1fr)}
 .ov-stat{padding:12px 8px;text-align:center;border-right:1px solid var(--border)}
 .ov-stat:last-child{border-right:none}
 .ov-stat-lbl{font-size:9px;font-weight:700;color:var(--dark3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
@@ -791,10 +791,24 @@ function addMsgCard(month){
 }
 
 // ── MONTH KPI BLOCK ───────────────────────────────────
+function calcDiff(a,b){return(a!=null&&b!=null)?a-b:null}
+function diffHtml(v,invert){
+  if(v==null)return'<span class="neu">—</span>';
+  if(v===0)return'<span class="neu">0</span>';
+  const good=invert?v<0:v>0;
+  const cls=good?'up':'dn';
+  const arrow=v>0?'▲':'▼';
+  return`<span class="${cls}">${arrow}${Math.abs(v).toLocaleString()}</span>`;
+}
+function fmtSigned(v){return v==null?'—':(v>0?'+':v<0?'-':'')+Math.abs(v).toLocaleString()}
 function monthKpiBlock(month){
   const d=getMonthOv(month);
   const prev=getPrevOvMonth(month);
   const pd=prev?getMonthOv(prev):null;
+  const dF=calcDiff(d.friends,pd?.friends);
+  const dB=calcDiff(d.blocks,pd?.blocks);
+  const dV=calcDiff(d.validFriends,pd?.validFriends);
+  const net=(dF!=null&&dB!=null)?dF-dB:null;
   const editHint=editMode?`<span style="opacity:.55;display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;margin-left:8px">${IC.pencil} 點擊編輯</span>`:'';
   const cell=(lbl,val,mom,isRate,dec)=>`<div class="kpi-cell">
     <div class="kpi-lbl">${lbl}</div>
@@ -810,10 +824,13 @@ function monthKpiBlock(month){
       ${editHint}
     </div>
     <div class="kpi-row">
-      ${cell('加入好友',d.friends,calcMoM(d.friends,pd?.friends))}
-      ${cell('有效好友',d.validFriends,calcMoM(d.validFriends,pd?.validFriends))}
-      ${cell('封鎖數',d.blocks,calcMoM(d.blocks,pd?.blocks))}
+      <div class="kpi-cell"><div class="kpi-lbl">加入好友</div><div class="kpi-val">${fmtNum(d.friends)}</div><div class="kpi-sub">${diffHtml(dF)}</div></div>
+      <div class="kpi-cell"><div class="kpi-lbl">有效好友</div><div class="kpi-val">${fmtNum(d.validFriends)}</div><div class="kpi-sub">${diffHtml(dV)}</div></div>
+      <div class="kpi-cell"><div class="kpi-lbl">封鎖數</div><div class="kpi-val">${fmtNum(d.blocks)}</div><div class="kpi-sub">${diffHtml(dB,true)}</div></div>
       ${cell('LINE 互動總數',d.interactions,calcMoM(d.interactions,pd?.interactions))}
+      <div class="kpi-cell"><div class="kpi-lbl">本月增加</div><div class="kpi-val" style="color:var(--teal-dk)">${fmtSigned(dF)}</div><div class="kpi-sub"><span class="neu">好友增加數</span></div></div>
+      <div class="kpi-cell"><div class="kpi-lbl">本月封鎖</div><div class="kpi-val" style="color:var(--red-dk)">${dB!=null?dB.toLocaleString():'—'}</div><div class="kpi-sub"><span class="neu">封鎖增加數</span></div></div>
+      <div class="kpi-cell"><div class="kpi-lbl">本月淨增加</div><div class="kpi-val" style="color:${net==null?'var(--dark)':net>=0?'var(--teal-dk)':'var(--red-dk)'}">${fmtSigned(net)}</div><div class="kpi-sub"><span class="neu">增加－封鎖</span></div></div>
     </div>
   </div>`;
 }
@@ -859,6 +876,10 @@ function renderOverview(){
 
   if(latestMonth){
     const d=getMonthOv(latestMonth);
+    const prevM=months.length>1?getMonthOv(months[months.length-2]):null;
+    const dF=calcDiff(d.friends,prevM?.friends);
+    const dB=calcDiff(d.blocks,prevM?.blocks);
+    const net=(dF!=null&&dB!=null)?dF-dB:null;
     html+=`<div class="sec neutral"><h2>最新月份 ${latestMonth} 概覽</h2></div>
     <div class="ov-platform-card">
       <div class="ov-ph"><div class="icon">${IC.line}</div><h3>LINE OA</h3></div>
@@ -868,6 +889,9 @@ function renderOverview(){
         <div class="ov-stat"><div class="ov-stat-lbl">封鎖率</div><div class="ov-stat-val" style="color:var(--red-dk)">${fmtRate(d.blockRate)}</div></div>
         <div class="ov-stat"><div class="ov-stat-lbl">互動總數</div><div class="ov-stat-val">${fmtNum(d.interactions)}</div></div>
         <div class="ov-stat"><div class="ov-stat-lbl">互動率</div><div class="ov-stat-val">${fmtRate(d.interRate)}</div></div>
+        <div class="ov-stat"><div class="ov-stat-lbl">本月增加</div><div class="ov-stat-val" style="color:var(--teal-dk)">${fmtSigned(dF)}</div></div>
+        <div class="ov-stat"><div class="ov-stat-lbl">本月封鎖</div><div class="ov-stat-val" style="color:var(--red-dk)">${dB!=null?dB.toLocaleString():'—'}</div></div>
+        <div class="ov-stat"><div class="ov-stat-lbl">本月淨增加</div><div class="ov-stat-val" style="color:${net==null?'var(--dark)':net>=0?'var(--teal-dk)':'var(--red-dk)'}">${fmtSigned(net)}</div></div>
       </div>
     </div>`;
   }
@@ -880,7 +904,7 @@ function renderOverview(){
   </div>`;
   html+=`<div class="sec neutral"><h2>趨勢圖表</h2></div>
   <div class="charts-grid">
-    <div class="chart-card"><h3>每月新增好友 vs 新增封鎖</h3><p>依「粉絲增長」月增量計算</p><canvas id="cNet" height="200"></canvas></div>
+    <div class="chart-card"><h3>每月新增好友 vs 新增封鎖 vs 淨增加</h3><p>淨增加＝新增好友－新增封鎖</p><canvas id="cNet" height="200"></canvas></div>
     <div class="chart-card"><h3>LINE 互動總數</h3><p>每月互動總數</p><canvas id="cInter" height="200"></canvas></div>
     <div class="chart-card"><h3>互動率</h3><p>互動總數 ÷ 有效好友</p><canvas id="cInterRate" height="200"></canvas></div>
   </div>`;
@@ -913,9 +937,12 @@ function renderOverview(){
       const cur=getMonthOv(m)[f],prev=getMonthOv(months[i])[f];
       return(cur!=null&&prev!=null)?cur-prev:null;
     });
+    const dFArr=delta('friends'),dBArr=delta('blocks');
+    const netArr=dFArr.map((v,i)=>(v!=null&&dBArr[i]!=null)?v-dBArr[i]:null);
     mk('cNet',{type:'bar',data:{labels:dm,datasets:[
-      {label:'新增好友',data:delta('friends'),backgroundColor:'rgba(58,194,207,.75)',borderRadius:4},
-      {label:'新增封鎖',data:delta('blocks'),backgroundColor:'rgba(240,77,41,.65)',borderRadius:4},
+      {label:'新增好友',data:dFArr,backgroundColor:'rgba(58,194,207,.75)',borderRadius:4},
+      {label:'新增封鎖',data:dBArr,backgroundColor:'rgba(240,77,41,.65)',borderRadius:4},
+      {type:'line',label:'淨增加',data:netArr,borderColor:'#FAA634',backgroundColor:'rgba(250,166,52,.15)',tension:.3,pointRadius:3,borderWidth:2},
     ]},options:baseOpts(false)});
     mk('cInter',{type:'line',data:{labels:months,datasets:[
       {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
