@@ -905,8 +905,7 @@ function renderOverview(){
   html+=`<div class="sec neutral"><h2>趨勢圖表</h2></div>
   <div class="charts-grid">
     <div class="chart-card"><h3>每月新增好友 vs 新增封鎖 vs 淨增加</h3><p>淨增加＝新增好友－新增封鎖</p><canvas id="cNet" height="200"></canvas></div>
-    <div class="chart-card"><h3>LINE 互動總數</h3><p>每月互動總數</p><canvas id="cInter" height="200"></canvas></div>
-    <div class="chart-card"><h3>互動率</h3><p>互動總數 ÷ 有效好友</p><canvas id="cInterRate" height="200"></canvas></div>
+    <div class="chart-card"><h3>LINE 互動總數 vs 互動率</h3><p>柱狀:互動總數(左軸);曲線:互動率＝互動總數 ÷ 有效好友(右軸)</p><canvas id="cInterCombo" height="200"></canvas></div>
     <div class="chart-card"><h3>封鎖率</h3><p>封鎖數 ÷ 加入好友</p><canvas id="cBlockRate" height="200"></canvas></div>
   </div>`;
   document.getElementById('main').innerHTML=html;
@@ -945,12 +944,23 @@ function renderOverview(){
       {label:'新增封鎖',data:dBArr,backgroundColor:'rgba(240,77,41,.65)',borderRadius:4},
       {type:'line',label:'淨增加',data:netArr,borderColor:'#FAA634',backgroundColor:'rgba(250,166,52,.15)',tension:.3,pointRadius:3,borderWidth:2},
     ]},options:baseOpts(false)});
-    mk('cInter',{type:'line',data:{labels:months,datasets:[
-      {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),borderColor:LINE_C,backgroundColor:'rgba(58,194,207,.12)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
-    ]},options:baseOpts(false)});
-    mk('cInterRate',{type:'line',data:{labels:months,datasets:[
-      {label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:RED_C,backgroundColor:'rgba(240,77,41,.08)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
-    ]},options:baseOpts(true,2)});
+    const comboOpts={responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:12},boxWidth:14}},tooltip:{callbacks:{label:c=>{
+        const v=c.parsed.y;
+        if(v==null)return'—';
+        const prev=c.dataset.data[c.dataIndex-1];
+        const chg=(prev!=null&&prev!==0)?((v-prev)/Math.abs(prev)*100):null;
+        const chgStr=chg!=null?` (${chg>=0?'+':''}${chg.toFixed(1)}%)`:'';
+        const isPct=c.dataset.yAxisID==='y1';
+        return`${c.dataset.label}: ${isPct?v.toFixed(2)+'%':v.toLocaleString()}${chgStr}`;
+      }}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
+        y:{position:'left',grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:11},callback:v=>v>=10000?(v/10000).toFixed(1)+'萬':v.toLocaleString()}},
+        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:11},callback:v=>v+'%'}}}};
+    mk('cInterCombo',{type:'bar',data:{labels:months,datasets:[
+      {label:'互動總數',data:months.map(m=>getMonthOv(m).interactions),backgroundColor:'rgba(58,194,207,.7)',borderRadius:4,yAxisID:'y'},
+      {type:'line',label:'互動率',data:months.map(m=>{const v=getMonthOv(m).interRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:RED_C,backgroundColor:'transparent',tension:.35,pointRadius:4,borderWidth:2,yAxisID:'y1'},
+    ]},options:comboOpts});
     mk('cBlockRate',{type:'line',data:{labels:months,datasets:[
       {label:'封鎖率',data:months.map(m=>{const v=getMonthOv(m).blockRate;return v!=null?+(v*100).toFixed(2):null}),borderColor:'#d63d1c',backgroundColor:'rgba(214,61,28,.08)',tension:.35,fill:true,pointRadius:4,borderWidth:2},
     ]},options:baseOpts(true,2)});
